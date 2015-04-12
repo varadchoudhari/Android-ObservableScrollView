@@ -224,9 +224,15 @@ public class ObservableRecyclerView extends RecyclerView implements Scrollable {
                         // we should aggregate offsets from all of the parents.
                         float offsetX = 0;
                         float offsetY = 0;
-                        for (View v = this; v != null && v != parent; v = (View) v.getParent()) {
-                            offsetX += v.getLeft() - v.getScrollX();
-                            offsetY += v.getTop() - v.getScrollY();
+                        for (View v = this; v != null && v != parent; ) {
+                        	ViewParent temp = v.getParent();
+                        	if(temp instanceof View) {
+                        		v = (View) temp;
+                        		offsetX += v.getLeft() - v.getScrollX();
+                                offsetY += v.getTop() - v.getScrollY();
+                        	}
+                        	else
+                        	{break;}
                         }
                         final MotionEvent event = MotionEvent.obtainNoHistory(ev);
                         event.offsetLocation(offsetX, offsetY);
